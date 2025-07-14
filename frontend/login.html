@@ -21,25 +21,33 @@
   </div>
 
   <script>
-    document.querySelector("#login-form").addEventListener("submit", async (e) => {
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const data = {
-        email: document.querySelector("#email").value,
-        password: document.querySelector("#password").value
-      };
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-      const result = await res.json();
-      if (result.token) {
-        localStorage.setItem("token", result.token);
-        alert("Login successful!");
-      } else {
-        alert(result.error);
+    
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+    
+      try {
+        const res = await fetch("https://login-app-o350.onrender.com/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+    
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem("token", data.token);
+          alert("Login successful!");
+          // Redirect to profile or home page
+          window.location.href = "profile.html";
+        } else {
+          alert(data.error);
+        }
+      } catch {
+        alert("Something went wrong. Try again.");
       }
     });
-  </script>
+    </script>
+    
 </body>
 </html>
